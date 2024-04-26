@@ -3,9 +3,15 @@
   "version": "0.0.0",
   "private": true,
   "exports": {
+    "./TextInput" : "./src/TextInput.tsx",
+    "./Select" : "./src/Select.tsx",
+    "./Card" : "./src/Card.tsx",
+    "./Center" : "./src/Center.tsx",
+    "./Appbar": "./src/Appbar.tsx",
     "./button": "./src/button.tsx",
     "./card": "./src/card.tsx",
     "./code": "./src/code.tsx"
+  
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",
