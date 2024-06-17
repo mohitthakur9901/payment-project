@@ -46,7 +46,7 @@ app.post("/hdfcWebhook", async (req, res) => {
                 create: {
                     userId: Number(paymentInformation.userId),
                     amount: Number(paymentInformation.amount),
-                    locked: Number(paymentInformation.amount),
+                    locked: 0,
                     
                 }
             })

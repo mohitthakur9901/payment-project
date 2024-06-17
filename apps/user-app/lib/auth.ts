@@ -1,6 +1,7 @@
 import db from "@repo/db/client";
 import CredentialsProvider from "next-auth/providers/credentials"
 import bcrypt from  'bcrypt'
+import { signIn, signOut } from "next-auth/react";
 
 export const authOptions = {
     providers: [
@@ -10,10 +11,10 @@ export const authOptions = {
             phone: { label: "Phone number", type: "text", placeholder: "1231231231" },
             password: { label: "Password", type: "password" }
           },
-          // TODO: User credentials type from next-aut
+          // TODO: User credentials type from next-auth
           async authorize(credentials: any) {
             // Do zod validation, OTP validation here
-            // const hashedPassword = await bcrypt.hash(credentials.password, 10);
+            const hashedPassword = await bcrypt.hash(credentials.password, 10);
             const existingUser = await db.user.findFirst({
                 where: {
                     number: credentials.phone
@@ -21,21 +22,22 @@ export const authOptions = {
             });
 
             if (existingUser) {
-                // const passwordValidation = await bcrypt.compare(credentials.password, existingUser.password);
-                // if (passwordValidation) {
+                const passwordValidation = await bcrypt.compare(credentials.password, existingUser.password);
+                if (passwordValidation) {
                     return {
                         id: existingUser.id.toString(),
                         name: existingUser.name,
                         email: existingUser.number
                     }
-                // }
+                }
             }
 
             try {
                 const user = await db.user.create({
                     data: {
                         number: credentials.phone,
-                        password: credentials.password
+                        password: hashedPassword,
+                       
                     }
                 });
             
@@ -54,13 +56,15 @@ export const authOptions = {
     ],
     secret: process.env.JWT_SECRET || "secret",
     callbacks: {
-        // TODO: can u fix the type here? Using any is bad
+        // TODO: can u fix the type apps/user-app/app/api/auth/signinhere? Using any is bad
         async session({ token, session }: any) {
             session.user.id = token.sub
 
             return session
         }
     },
+  
+   
         
   }
  
