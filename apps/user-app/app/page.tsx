@@ -12,6 +12,7 @@ export default async function Page() {
     redirect('/dashboard')
   } else {
     return <LandingPage />
+    
   }
   
 }
